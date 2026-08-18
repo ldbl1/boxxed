@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boxxed - Ajustes</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="light" data-accent="blue">
+    <div id="settings-view" style="display: flex; flex-direction: column; height: 100vh;">
+        <header>
+            <h1>Ajustes</h1>
+            <div class="header-actions">
+                <button onclick="window.location.href='/'">Volver al inventario</button>
+            </div>
+        </header>
+        <div class="settings-layout" style="display: flex; flex: 1; overflow: hidden;">
+            <div class="settings-sidebar" style="width: 280px; background: var(--panel-bg); border-right: 1px solid var(--border-color); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <h2>Preferencias</h2>
+                <button class="settings-nav-item active" onclick="switchTab('appearance', this)">Aspecto</button>
+                <button class="settings-nav-item" onclick="switchTab('language', this)">Idioma</button>
+                <button id="tab-admin" class="settings-nav-item hidden" onclick="switchTab('administration', this)">Administración</button>
+            </div>
+            <div class="settings-content-area" style="flex: 1; padding: 2.5rem; overflow-y: auto;">
+                
+                <!-- Pestaña Aspecto -->
+                <div id="section-appearance" class="settings-panel-section">
+                    <h3>Aspecto</h3>
+                    <div class="settings-card">
+                        <label>Tema</label>
+                        <select id="theme-select" onchange="changeTheme(this.value)">
+                            <option value="light">Claro</option>
+                            <option value="dark">Oscuro</option>
+                        </select>
+                        <label style="margin-top: 1rem;">Color de acento</label>
+                        <div class="color-picker" style="display: flex; gap: 10px; margin-top: 5px;">
+                            <button style="background: #2563eb; width: 30px; height: 30px; border-radius: 50%; border:none; cursor:pointer;" onclick="changeAccent('blue')"></button>
+                            <button style="background: #16a34a; width: 30px; height: 30px; border-radius: 50%; border:none; cursor:pointer;" onclick="changeAccent('green')"></button>
+                            <button style="background: #7c3aed; width: 30px; height: 30px; border-radius: 50%; border:none; cursor:pointer;" onclick="changeAccent('purple')"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña Idioma -->
+                <div id="section-language" class="settings-panel-section hidden">
+                    <h3>Idioma</h3>
+                    <div class="settings-card">
+                        <label>Idioma de la aplicación</label>
+                        <select id="lang-select" onchange="changeLanguage(this.value)">
+                            <option value="es-ES">Español (España)</option>
+                            <option value="en-GB">English (UK)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Pestaña Administración (Solo Superusuario) -->
+                <div id="section-administration" class="settings-panel-section hidden">
+                    <h3>Administración</h3>
+                    <div class="settings-card">
+                        <h4>Gestión de Usuarios</h4>
+                        <input type="text" id="adm-username" placeholder="Nombre de usuario" style="padding: 8px; margin-bottom: 8px; width: 100%;">
+                        <input type="password" id="adm-password" placeholder="Contraseña" style="padding: 8px; margin-bottom: 8px; width: 100%;">
+                        <button onclick="createUser()" style="background: var(--accent); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer;">Crear / Registrar Usuario</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/settings.js"></script>
+</body>
+</html>

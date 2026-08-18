@@ -1,0 +1,553 @@
+:root {
+    --bg-color: #f4f5f7;
+    --panel-bg: #ffffff;
+    --text-color: #1f2937;
+    --text-muted: #6b7280;
+    --header-bg: #ffffff;
+    --header-border: #e5e7eb;
+    --border-color: #e5e7eb;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --radius: 8px;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --header-bg: #1e293b;
+    --header-border: #334155;
+    --border-color: #334155;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+body[data-accent="green"] { --accent: #16a34a; --accent-hover: #15803d; }
+body[data-accent="purple"] { --accent: #7c3aed; --accent-hover: #6d28d9; }
+body[data-accent="orange"] { --accent: #ea580c; --accent-hover: #c2410c; }
+
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    margin: 0; 
+    background: var(--bg-color); 
+    color: var(--text-color); 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    -webkit-font-smoothing: antialiased;
+}
+
+header { 
+    background: var(--header-bg); 
+    color: var(--text-color); 
+    padding: 0.85rem 1.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 1px solid var(--header-border);
+    flex-wrap: wrap; 
+    gap: 12px;
+}
+
+header h1 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.header-actions { 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+    flex-wrap: wrap; 
+}
+
+header button { 
+    padding: 0.5rem 0.9rem; 
+    background: transparent; 
+    color: var(--text-color); 
+    border: 1px solid var(--border-color); 
+    border-radius: var(--radius); 
+    cursor: pointer; 
+    font-weight: 500; 
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+header button:hover {
+    background: var(--bg-color);
+    border-color: var(--text-muted);
+}
+
+header button.btn-primary, header button[onclick*="togglePanel('item')"] {
+    background: var(--accent);
+    color: white;
+    border-color: transparent;
+}
+
+header button.btn-primary:hover, header button[onclick*="togglePanel('item')"]:hover {
+    background: var(--accent-hover);
+}
+
+header button.btn-danger {
+    background: var(--danger);
+    color: white;
+    border-color: transparent;
+}
+
+header button.btn-danger:hover {
+    background: var(--danger-hover);
+}
+
+main { 
+    padding: 1.5rem; 
+    flex: 1; 
+    overflow-y: auto; 
+    max-width: 1400px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.search-container { 
+    margin-bottom: 1.25rem; 
+}
+
+#search-bar { 
+    width: 100%; 
+    padding: 0.75rem 1rem; 
+    border: 1px solid var(--border-color); 
+    background: var(--panel-bg); 
+    color: var(--text-color); 
+    border-radius: var(--radius); 
+    box-sizing: border-box; 
+    font-size: 0.95rem; 
+    box-shadow: var(--shadow);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#search-bar:focus {
+    border-color: var(--accent);
+}
+
+/* Vista Cuadrícula (Grid) */
+.items-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 1.25rem; 
+}
+
+.item-card { 
+    background: var(--panel-bg); 
+    border: 1px solid var(--border-color); 
+    padding: 1.25rem; 
+    border-radius: var(--radius); 
+    box-shadow: var(--shadow); 
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.item-card h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.item-card p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.item-card .item-meta {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+/* Vista Tabla Clásica */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.items-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    min-width: 800px;
+    font-size: 0.9rem;
+}
+
+.items-table th, .items-table td { 
+    padding: 0.85rem 1rem; 
+    text-align: left; 
+    border-bottom: 1px solid var(--border-color); 
+}
+
+.items-table th { 
+    background: var(--bg-color); 
+    color: var(--text-color); 
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.items-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+body.dark .items-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Panel Lateral (Drawer) para formularios de creación independientes */
+#side-panel { 
+    position: fixed; 
+    top: 0; 
+    right: -100%; 
+    width: 100%; 
+    max-width: 420px; 
+    height: 100%; 
+    background: var(--panel-bg); 
+    box-shadow: -10px 0 25px rgba(0,0,0,0.15); 
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+    padding: 1.5rem; 
+    box-sizing: border-box; 
+    z-index: 1000; 
+    display: flex; 
+    flex-direction: column; 
+    border-left: 1px solid var(--border-color);
+}
+
+#side-panel.open { 
+    right: 0; 
+}
+
+.panel-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 1px solid var(--border-color); 
+    padding-bottom: 0.75rem; 
+}
+
+.panel-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn { 
+    background: none; 
+    border: none; 
+    font-size: 1.25rem; 
+    cursor: pointer; 
+    color: var(--text-muted); 
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.close-btn:hover {
+    color: var(--text-color);
+    background: var(--bg-color);
+}
+
+.panel-content { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+    margin-top: 1.25rem; 
+    overflow-y: auto; 
+    flex: 1; 
+}
+
+.panel-content label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.panel-content input, .panel-content textarea, .panel-content select { 
+    padding: 0.75rem; 
+    border: 1px solid var(--border-color); 
+    background: var(--panel-bg); 
+    color: var(--text-color); 
+    border-radius: var(--radius); 
+    width: 100%; 
+    box-sizing: border-box; 
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.panel-content input:focus, .panel-content textarea:focus, .panel-content select:focus {
+    border-color: var(--accent);
+}
+
+.panel-content button[type="submit"], .panel-content button:not(.close-btn) { 
+    background: var(--accent); 
+    color: white; 
+    border: none; 
+    padding: 0.75rem; 
+    border-radius: var(--radius); 
+    font-weight: 500; 
+    cursor: pointer; 
+    transition: background 0.2s;
+}
+
+.panel-content button[type="submit"]:hover, .panel-content button:not(.close-btn):hover { 
+    background: var(--accent-hover); 
+}
+
+/* Pantalla Completa de Ajustes Estilo Immich */
+#settings-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-color);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.settings-sidebar {
+    width: 280px;
+    background: var(--panel-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 0.5rem;
+}
+
+.settings-sidebar h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0.5rem;
+}
+
+.settings-nav-item {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    text-align: left;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.settings-nav-item:hover {
+    background: var(--bg-color);
+}
+
+.settings-nav-item.active {
+    background: var(--accent);
+    color: white;
+}
+
+.settings-content-area {
+    flex: 1;
+    padding: 2.5rem;
+    overflow-y: auto;
+    max-width: 900px;
+}
+
+.settings-panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.settings-panel-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.settings-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Modales y Pantallas */
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(4px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000; 
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.card { 
+    background: var(--panel-bg); 
+    padding: 2rem; 
+    border-radius: 12px; 
+    width: 100%; 
+    max-width: 380px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1.25rem; 
+    box-shadow: var(--shadow-lg); 
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.card input { 
+    padding: 0.75rem 1rem; 
+    border: 1px solid var(--border-color); 
+    background: var(--panel-bg); 
+    color: var(--text-color); 
+    border-radius: var(--radius); 
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.card input:focus {
+    border-color: var(--accent);
+}
+
+.card button { 
+    background: var(--accent); 
+    color: white; 
+    border: none; 
+    padding: 0.75rem; 
+    border-radius: var(--radius); 
+    font-weight: 500; 
+    cursor: pointer; 
+    transition: background 0.2s;
+}
+
+.card button:hover {
+    background: var(--accent-hover);
+}
+
+.hidden { display: none !important; }
+
+.setting-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.5rem; 
+}
+
+.color-picker { 
+    display: flex; 
+    gap: 12px; 
+}
+
+.color-picker button { 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    border: 2px solid transparent; 
+    cursor: pointer; 
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.color-picker button:hover {
+    transform: scale(1.1);
+}
+
+ul { padding-left: 20px; margin: 0; }
+li { margin-bottom: 8px; }
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem 1rem;
+    }
+    
+    .header-actions {
+        justify-content: space-between;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    header button {
+        flex: 1;
+        white-space: nowrap;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .settings-layout {
+        flex-direction: column;
+    }
+
+    .settings-sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 1rem;
+        gap: 8px;
+    }
+
+    .settings-sidebar h2 {
+        display: none;
+    }
+
+    .settings-content-area {
+        padding: 1rem;
+    }
+}
