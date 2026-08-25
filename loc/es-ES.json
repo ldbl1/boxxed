@@ -1,6 +1,7 @@
 {
   "app_title": "Boxxed - Inventario",
   "settings": "Ajustes",
+  "settings_preferences": "Preferencias",
   "theme": "Tema",
   "theme_light": "Claro",
   "theme_dark": "Oscuro",
@@ -52,4 +53,54 @@
   "settings_administration": "Administración",
   "settings_administration_desc": "Gestión avanzada de usuarios y permisos de sistema.",
   "back_to_inventory": "Volver al inventario"
+  ,"barcode": "Código o valor escaneable"
+  ,"photos": "fotos"
+  ,"scan": "Escanear"
+  ,"code": "Código"
+  ,"barcode_prompt": "Este navegador no soporta escaneo directo. Introduce el valor:"
+  ,"camera_unavailable": "La webcam no está disponible"
+  ,"camera_error": "No se pudo acceder a la webcam"
+  ,"scan_hint": "Apunta la cámara al código"
+  ,"view_detail": "Ver detalle"
+  ,"item_detail": "Detalle del artículo"
+  ,"no_photos": "Este artículo no tiene fotos."
+  ,"existing_photos": "Fotos actuales"
+  ,"expand": "Ampliar"
+  ,"collapse": "Reducir"
+  ,"create_tag": "Crear etiqueta"
+  ,"no_tags": "Aún no hay etiquetas creadas."
+  ,"confirm_delete_photo": "¿Eliminar esta foto?"
+  ,"code_not_found": "No se encontró ningún código en la imagen"
+  ,"all_categories": "Todas las categorías"
+  ,"all_groups": "Todos los grupos"
+  ,"no_description": "Sin descripción"
+  ,"no_category": "Sin categoría"
+  ,"public": "Público"
+  ,"units": "uds."
+  ,"modified_by_label": "Modificado por"
+  ,"none": "(Ninguno)"
+  ,"new_item": "Nuevo ítem"
+  ,"new_group": "Nuevo grupo"
+  ,"new_category": "Nueva categoría"
+  ,"existing_categories": "Categorías existentes"
+  ,"groups_existing": "Grupos existentes"
+  ,"user_group": "Grupo asignado"
+  ,"item_name_placeholder": "Nombre"
+  ,"item_description_placeholder": "Descripción"
+  ,"item_quantity_placeholder": "Cantidad"
+  ,"new_tag_placeholder": "Nueva etiqueta"
+  ,"barcode_placeholder": "Código de barras, QR o referencia"
+  ,"tag_search_placeholder": "Buscar o crear etiqueta"
+  ,"remove_tag": "Quitar etiqueta"
+  ,"switch_to_table": "Cambiar a tabla"
+  ,"switch_to_grid": "Cambiar a grid"
+  ,"new_group_button": "Nuevo grupo"
+  ,"group_visibility_help": "Grupo de visibilidad"
+  ,"no_groups": "Sin grupos."
+  ,"admin_only": "Solo superusuario"
+  ,"superuser": "Superusuario"
+  ,"create_group": "Crear grupo"
+  ,"edit_group": "Editar grupo"
+  ,"edit_user": "Editar usuario"
+  ,"save_changes": "Guardar cambios"
 }

@@ -9,5 +9,4 @@ COPY . .
 
 EXPOSE 3001
 
-# CAMBIAR ESTA LÍNEA (Usamos node directo en lugar de npm start)
 CMD ["node", "server.js"]

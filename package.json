@@ -7,9 +7,12 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@zxing/browser": "0.1.5",
+    "@zxing/library": "0.21.3",
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "multer": "^2.2.0",
     "sqlite3": "^5.1.7"
   }
 }

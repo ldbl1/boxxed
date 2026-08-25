@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   boxxed:
     build: .
@@ -9,5 +7,7 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - PORT=3001
+      PORT: 3001
+      SESSION_SECRET: "flhkads65lkhñasdjhfoih45"
+      SESSION_SECURE: "false"
     restart: unless-stopped

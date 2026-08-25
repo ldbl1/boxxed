@@ -1,6 +1,7 @@
 {
   "app_title": "Boxxed - Inventory",
   "settings": "Settings",
+  "settings_preferences": "Preferences",
   "theme": "Theme",
   "theme_light": "Light",
   "theme_dark": "Dark",
@@ -52,4 +53,54 @@
   "settings_administration": "Administration",
   "settings_administration_desc": "Advanced user management and system permissions.",
   "back_to_inventory": "Back to inventory"
+  ,"barcode": "Scannable code or value"
+  ,"photos": "photos"
+  ,"scan": "Scan"
+  ,"code": "Code"
+  ,"barcode_prompt": "This browser does not support direct scanning. Enter the value:"
+  ,"camera_unavailable": "The webcam is not available"
+  ,"camera_error": "Could not access the webcam"
+  ,"scan_hint": "Point the camera at the code"
+  ,"view_detail": "View details"
+  ,"item_detail": "Item details"
+  ,"no_photos": "This item has no photos."
+  ,"existing_photos": "Current photos"
+  ,"expand": "Expand"
+  ,"collapse": "Collapse"
+  ,"create_tag": "Create tag"
+  ,"no_tags": "No tags have been created yet."
+  ,"confirm_delete_photo": "Delete this photo?"
+  ,"code_not_found": "No code was found in the image"
+  ,"all_categories": "All categories"
+  ,"all_groups": "All groups"
+  ,"no_description": "No description"
+  ,"no_category": "No category"
+  ,"public": "Public"
+  ,"units": "units"
+  ,"modified_by_label": "Modified by"
+  ,"none": "(None)"
+  ,"new_item": "New item"
+  ,"new_group": "New group"
+  ,"new_category": "New category"
+  ,"existing_categories": "Existing categories"
+  ,"groups_existing": "Existing groups"
+  ,"user_group": "Assigned group"
+  ,"item_name_placeholder": "Name"
+  ,"item_description_placeholder": "Description"
+  ,"item_quantity_placeholder": "Quantity"
+  ,"new_tag_placeholder": "New tag"
+  ,"barcode_placeholder": "Barcode, QR code or reference"
+  ,"tag_search_placeholder": "Search or create tag"
+  ,"remove_tag": "Remove tag"
+  ,"switch_to_table": "Switch to table"
+  ,"switch_to_grid": "Switch to grid"
+  ,"new_group_button": "New group"
+  ,"group_visibility_help": "Visibility group"
+  ,"no_groups": "No groups."
+  ,"admin_only": "Superuser only"
+  ,"superuser": "Superuser"
+  ,"create_group": "Create group"
+  ,"edit_group": "Edit group"
+  ,"edit_user": "Edit user"
+  ,"save_changes": "Save changes"
 }
