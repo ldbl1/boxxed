@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+<h2>Editar Ubicación</h2>
+<div class="card">
+    <form method="POST" action="/locations/<%= location.id %>/edit" enctype="multipart/form-data">
+        <label>Nombre</label>
+        <input type="text" name="name" value="<%= location.name %>" required>
+
+        <% if (!location.parent_id) { %>
+            <label for="location-image">Imágenes</label>
+            <% if (!location.gallery.images.length) { %><input id="location-image" type="file" name="image" accept="image/*"><% } %>
+            <div class="upload-preview" data-upload-preview></div>
+        <% } %>
+        <% const mediaType = 'locations'; const mediaGallery = location.gallery; const mediaId = location.id; %>
+        <%- include('../partials/media-gallery', { mediaType: mediaType, mediaGallery: mediaGallery, mediaId: mediaId, sharedGallery: sharedGallery, regionsEnabled: true, showPrimary: false, readOnly: false }) %>
+        
+        <label>Pertenece a (Jerarquía)</label>
+        <div class="hierarchy-select">
+            <select name="parent_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
+                <option value="">-- Ubicación Principal --</option>
+                <% locations.forEach(function(loc) { %>
+                    <option value="<%= loc.id %>" data-full-path="<%= loc.fullPath %>" <%= location.parent_id == loc.id ? 'selected' : '' %>><%= loc.name %></option>
+                <% }); %>
+            </select>
+            <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
+            <div class="hierarchy-select-menu" role="listbox" hidden>
+                <button type="button" class="hierarchy-select-option" data-value="">-- Ubicación Principal --</button>
+                <% locations.forEach(function(loc) { %>
+                    <button type="button" class="hierarchy-select-option" data-value="<%= loc.id %>" data-label="<%= loc.fullPath %>" data-depth="<%= loc.depth %>"><%= loc.name %></button>
+                <% }); %>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn">Actualizar</button>
+        <a href="/locations" class="btn btn-secondary">Cancelar</a>
+    </form>
+    <form method="POST" action="/locations/<%= location.id %>/delete" class="delete-form form-delete" data-confirm="¿Eliminar esta ubicación? Sus hijos pasarán a ser principales.">
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ubicación</button>
+    </form>
+</div>
+<%- include('../partials/footer') %>

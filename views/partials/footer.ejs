@@ -1,0 +1,326 @@
+</main>
+</div>
+<script>
+    // Buscador genérico
+    function filterItems(className, inputId = 'searchInput', emptyId = null) {
+        let filter = document.getElementById(inputId).value.toLowerCase();
+        let items = document.querySelectorAll(className);
+        let visibleCount = 0;
+
+        items.forEach(item => {
+            let text = item.getAttribute('data-search');
+            if (text.includes(filter)) {
+                item.classList.remove('is-hidden');
+                visibleCount++;
+                // Si estamos en un árbol, abrimos y mostramos a todos los padres de la coincidencia
+                if (className === '.tree-item') {
+                    let parent = item.parentElement.closest('.tree-item');
+                    while (parent) {
+                        parent.classList.remove('is-hidden');
+                        let childrenBox = parent.querySelector('.tree-children');
+                        let btn = parent.querySelector('.toggle-btn');
+                        if (childrenBox) childrenBox.classList.remove('is-hidden');
+                        if (btn) btn.innerText = '▼';
+                        parent = parent.parentElement.closest('.tree-item');
+                    }
+                }
+            } else {
+                item.classList.add('is-hidden');
+            }
+        });
+        if (emptyId) document.getElementById(emptyId).classList.toggle('is-hidden', visibleCount > 0);
+    }
+
+    // Botón desplegar árbol
+    function toggleNode(btn) {
+        let children = btn.closest('.tree-node').nextElementSibling;
+        if (children) {
+            if (children.classList.contains('is-hidden')) {
+                children.classList.remove('is-hidden');
+                btn.innerText = '▼';
+            } else {
+                children.classList.add('is-hidden');
+                btn.innerText = '▶';
+            }
+        }
+    }
+
+    const inventorySearch = document.getElementById('itemsSearch');
+    const inventoryItems = document.querySelectorAll('.item-searchable');
+    const inventoryFilters = document.querySelectorAll('.multi-filter');
+
+    function applyInventoryFilters() {
+        if (!inventorySearch || !inventoryItems.length) return;
+        const query = inventorySearch.value.toLowerCase();
+        const selected = {};
+        inventoryFilters.forEach(function (filter) {
+            selected[filter.dataset.filterKey] = Array.from(filter.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+        });
+        let visible = 0;
+        inventoryItems.forEach(function (item) {
+            const categoryIds = item.dataset.categoryFilterIds.split(',');
+            const locationIds = item.dataset.locationFilterIds.split(',');
+            const categoryMatches = !selected.category.length || selected.category.some(id => categoryIds.includes(id));
+            const locationMatches = !selected.location.length || selected.location.some(id => locationIds.includes(id));
+            const textMatches = item.dataset.search.includes(query);
+            const matches = categoryMatches && locationMatches && textMatches;
+            item.classList.toggle('is-hidden', !matches);
+            if (matches) visible++;
+        });
+        document.getElementById('items-empty')?.classList.toggle('is-hidden', visible > 0);
+    }
+
+    inventoryFilters.forEach(function (filter) {
+        const button = filter.querySelector('.multi-filter-button');
+        const menu = filter.querySelector('.multi-filter-menu');
+        const search = filter.querySelector('.multi-filter-search');
+        const options = filter.querySelectorAll('.multi-filter-option');
+        const defaultLabel = button.textContent;
+
+        button.addEventListener('click', function () {
+            const open = !menu.hidden;
+            inventoryFilters.forEach(other => { if (other !== filter) other.querySelector('.multi-filter-menu').hidden = true; });
+            menu.hidden = open;
+            button.setAttribute('aria-expanded', String(!open));
+            if (!open) search.focus();
+        });
+        search.addEventListener('input', function () {
+            const query = search.value.toLowerCase();
+            options.forEach(option => option.classList.toggle('is-hidden', !option.dataset.label.includes(query)));
+        });
+        filter.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const count = filter.querySelectorAll('input[type="checkbox"]:checked').length;
+                button.textContent = count ? `${count} seleccionada${count === 1 ? '' : 's'}` : defaultLabel;
+                applyInventoryFilters();
+            });
+        });
+    });
+    inventorySearch?.addEventListener('input', applyInventoryFilters);
+
+    document.querySelectorAll('.hierarchy-select').forEach(function (container) {
+        let nativeSelect = container.querySelector('.hierarchy-select-native');
+        let displayButton = container.querySelector('.hierarchy-select-button');
+        let menu = container.querySelector('.hierarchy-select-menu');
+        let options = container.querySelectorAll('.hierarchy-select-option');
+
+        function updateSelection() {
+            let selected = nativeSelect.options[nativeSelect.selectedIndex];
+            displayButton.textContent = selected.dataset.fullPath || selected.textContent.trim();
+            const field = container.closest('.hierarchy-field');
+            if (field) {
+                const preview = field.querySelector('[data-hierarchy-preview]');
+                const image = field.querySelector('[data-hierarchy-image]');
+                const placeholder = field.querySelector('[data-hierarchy-placeholder]');
+                const info = field.querySelector('[data-hierarchy-info]');
+                const filename = selected.dataset.image;
+                preview.hidden = !nativeSelect.value;
+                image.hidden = !filename;
+                placeholder.hidden = !!filename || !nativeSelect.value;
+                if (filename) image.src = `/uploads/${filename}`;
+                if (info) {
+                    info.href = nativeSelect.value ? field.dataset.infoUrl : '#';
+                    info.classList.toggle('is-disabled', !nativeSelect.value);
+                }
+            }
+            options.forEach(function (option) {
+                option.classList.add(`hierarchy-depth-${option.dataset.depth || 0}`);
+                option.setAttribute('aria-selected', option.dataset.value === nativeSelect.value ? 'true' : 'false');
+            });
+        }
+
+        displayButton.addEventListener('click', function () {
+            let isOpen = !menu.hidden;
+            menu.hidden = isOpen;
+            displayButton.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        options.forEach(function (option) {
+            option.addEventListener('click', function () {
+                nativeSelect.value = option.dataset.value;
+                nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                menu.hidden = true;
+                displayButton.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        nativeSelect.addEventListener('change', updateSelection);
+        updateSelection();
+    });
+
+    document.querySelectorAll('[data-hierarchy-native-select]').forEach(function (select) {
+        const field = select.closest('.hierarchy-native-field');
+        const preview = field.querySelector('[data-hierarchy-preview]');
+        const image = field.querySelector('[data-hierarchy-image]');
+        const placeholder = field.querySelector('[data-hierarchy-placeholder]');
+        function updateNativePreview() {
+            const filename = select.options[select.selectedIndex].dataset.image;
+            preview.hidden = !select.value;
+            image.hidden = !filename;
+            placeholder.hidden = !!filename || !select.value;
+            if (filename) image.src = `/uploads/${filename}`;
+        }
+        select.addEventListener('change', updateNativePreview);
+        updateNativePreview();
+    });
+
+    document.querySelectorAll('.delete-form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+        });
+    });
+
+    document.querySelectorAll('.media-gallery').forEach(function (gallery) {
+        function parseData(value, fallback) {
+            try { return JSON.parse(value); } catch (error) { return fallback; }
+        }
+
+        function relativeRegion(region, clip) {
+            if (!region) return null;
+            return {
+                x: (region.x - clip.x) / clip.width,
+                y: (region.y - clip.y) / clip.height,
+                width: region.width / clip.width,
+                height: region.height / clip.height
+            };
+        }
+
+        function applyCrop(frame, image, clip) {
+            const render = function () {
+                if (!image.naturalWidth || !image.naturalHeight) return;
+                frame.style.aspectRatio = `${image.naturalWidth * clip.width} / ${image.naturalHeight * clip.height}`;
+                if (clip.x === 0 && clip.y === 0 && clip.width === 1 && clip.height === 1) return;
+                frame.classList.add('is-cropped');
+                image.style.width = `${100 / clip.width}%`;
+                image.style.height = `${100 / clip.height}%`;
+                image.style.left = `${-clip.x * 100 / clip.width}%`;
+                image.style.top = `${-clip.y * 100 / clip.height}%`;
+            };
+            image.addEventListener('load', render, { once: true });
+            if (image.complete) render();
+        }
+
+        gallery.querySelectorAll('.media-card').forEach(function (card) {
+            const frame = card.querySelector('.media-frame');
+            const image = card.querySelector('.media-image');
+            const clip = parseData(card.dataset.clip, { x: 0, y: 0, width: 1, height: 1 });
+            const region = parseData(card.dataset.region, null);
+            applyCrop(frame, image, clip);
+            if (region) {
+                const marker = document.createElement('span');
+                marker.className = 'media-region-marker';
+                marker.dataset.region = JSON.stringify(relativeRegion(region, clip));
+                frame.appendChild(marker);
+                const relative = relativeRegion(region, clip);
+                marker.style.left = `${relative.x * 100}%`;
+                marker.style.top = `${relative.y * 100}%`;
+                marker.style.width = `${relative.width * 100}%`;
+                marker.style.height = `${relative.height * 100}%`;
+            }
+        });
+
+        gallery.querySelectorAll('input[name="primary_image"]').forEach(function (radio) {
+            radio.addEventListener('change', async function () {
+                await fetch(`/media/${gallery.dataset.type}/${gallery.dataset.id}/primary`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: radio.value })
+                });
+            });
+        });
+
+        gallery.querySelectorAll('[data-media-action="delete"]').forEach(function (button) {
+            button.addEventListener('click', async function () {
+                const card = button.closest('.media-card');
+                if (!window.confirm('¿Eliminar esta foto?')) return;
+                const response = await fetch(`/media/${gallery.dataset.type}/${gallery.dataset.id}/delete`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: card.dataset.filename })
+                });
+                if (response.ok) {
+                    if (gallery.dataset.type !== 'items') window.location.reload();
+                    else card.remove();
+                }
+            });
+        });
+
+        gallery.querySelectorAll('[data-media-action="link"]').forEach(function (button) {
+            button.addEventListener('click', async function () {
+                const card = button.closest('.media-card');
+                const response = await fetch(`/media/${gallery.dataset.type}/${gallery.dataset.id}/link`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: card.dataset.filename })
+                });
+                if (response.ok) window.location.reload();
+            });
+        });
+
+        gallery.querySelectorAll('[data-media-action="region"]').forEach(function (button) {
+            const card = button.closest('.media-card');
+            const dialog = card.querySelector('.region-dialog');
+            const canvas = card.querySelector('.region-canvas');
+            const image = card.querySelector('.region-image');
+            const selection = card.querySelector('.region-selection');
+            const clip = parseData(card.dataset.clip, { x: 0, y: 0, width: 1, height: 1 });
+            let start = null;
+            let currentRegion = relativeRegion(parseData(card.dataset.region, null), clip);
+
+            function drawRegion(region) {
+                if (!region) return;
+                selection.style.left = `${region.x * 100}%`;
+                selection.style.top = `${region.y * 100}%`;
+                selection.style.width = `${region.width * 100}%`;
+                selection.style.height = `${region.height * 100}%`;
+            }
+
+            button.addEventListener('click', function () {
+                dialog.showModal();
+                applyCrop(canvas, image, clip);
+                drawRegion(currentRegion);
+            });
+
+            canvas.addEventListener('pointerdown', function (event) {
+                const bounds = canvas.getBoundingClientRect();
+                start = { x: (event.clientX - bounds.left) / bounds.width, y: (event.clientY - bounds.top) / bounds.height };
+            });
+
+            canvas.addEventListener('pointermove', function (event) {
+                if (!start) return;
+                const bounds = canvas.getBoundingClientRect();
+                const end = { x: Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width)), y: Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height)) };
+                currentRegion = { x: Math.min(start.x, end.x), y: Math.min(start.y, end.y), width: Math.abs(end.x - start.x), height: Math.abs(end.y - start.y) };
+                drawRegion(currentRegion);
+            });
+
+            canvas.addEventListener('pointerup', function () { start = null; });
+            card.querySelector('[data-region-action="cancel"]').addEventListener('click', function () { dialog.close(); });
+            card.querySelector('[data-region-action="save"]').addEventListener('click', async function () {
+                if (!currentRegion || !currentRegion.width || !currentRegion.height) return;
+                const response = await fetch(`/media/${gallery.dataset.type}/${gallery.dataset.id}/region`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: card.dataset.filename, ...currentRegion, clip: clip })
+                });
+                if (response.ok) dialog.close();
+            });
+        });
+    });
+
+    document.querySelectorAll('input[type="file"]').forEach(function (input) {
+        const preview = input.parentElement.querySelector('[data-upload-preview]');
+        if (!preview) return;
+        input.addEventListener('change', function () {
+            preview.innerHTML = '';
+            Array.from(input.files).forEach(function (file, index) {
+                const label = document.createElement('label');
+                label.className = 'upload-preview-card';
+                const primaryControl = input.multiple
+                    ? `<span><input type="radio" name="primary_index" value="${index}" ${index === 0 ? 'checked' : ''}> Principal</span>`
+                    : '';
+                label.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Vista previa">${primaryControl}`;
+                preview.appendChild(label);
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

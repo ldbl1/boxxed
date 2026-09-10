@@ -1,18 +1,28 @@
 {
   "name": "boxxed",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Inventario doméstico con categorías, ubicaciones jerárquicas e imágenes",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js",
+    "test": "node --check app.js && node --check database.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldbl1/boxxed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ldbl1/boxxed/issues"
+  },
+  "homepage": "https://github.com/ldbl1/boxxed#readme",
   "dependencies": {
-    "@zxing/browser": "0.1.5",
-    "@zxing/library": "0.21.3",
-    "bcrypt": "^5.1.1",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "multer": "^2.2.0",
-    "sqlite3": "^5.1.7"
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "multer": "^2.3.0",
+    "sqlite3": "^6.0.1"
   }
 }

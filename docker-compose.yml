@@ -1,13 +1,25 @@
 services:
   boxxed:
     build: .
+    image: boxxed:latest
     container_name: boxxed
+    restart: unless-stopped
     ports:
       - "3001:3001"
-    volumes:
-      - ./data:/app/data
     environment:
+      NODE_ENV: production
       PORT: 3001
-      SESSION_SECRET: "flhkads65lkhñasdjhfoih45"
-      SESSION_SECURE: "false"
-    restart: unless-stopped
+      DATA_DIR: /app/data
+    volumes:
+      - boxxed-data:/app/data
+      - boxxed-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3001/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  boxxed-data:
+  boxxed-uploads:
