@@ -36,12 +36,17 @@
             </div>
         </div>
     </div>
+    <button type="button" class="btn btn-secondary clear-filters-button" onclick="clearInventoryFilters()">
+        <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
+    </button>
 </div>
 
 <% items.forEach(function(item) { %>
-    <div class="item-row item-searchable" data-category-id="<%= item.category_id || '' %>" data-location-id="<%= item.location_id || '' %>" data-category-filter-ids="<%= item.category_filter_ids.join(',') %>" data-location-filter-ids="<%= item.location_filter_ids.join(',') %>" data-search="<%= [item.name, item.category_name, item.location_name].join(' ').toLowerCase() %>">
-    <div>
+    <div class="item-row item-card item-searchable" data-category-id="<%= item.category_id || '' %>" data-location-id="<%= item.location_id || '' %>" data-category-filter-ids="<%= item.category_filter_ids.join(',') %>" data-location-filter-ids="<%= item.location_filter_ids.join(',') %>" data-search="<%= [item.name, item.category_name, item.location_name].join(' ').toLowerCase() %>">
+    <div class="item-card-media">
         <% if (item.image) { %><img class="item-image" src="/uploads/<%= item.image %>" alt=""><% } else { %><span class="item-image image-placeholder"><i class="bi bi-box-seam" aria-hidden="true"></i></span><% } %>
+    </div>
+    <div class="item-card-details">
         <strong class="item-name"><a href="/items/<%= item.id %>/edit"><%= item.name %></a> <span class="item-quantity">(x<%= item.quantity %>)</span></strong>
         <p class="item-meta">
             <i class="bi bi-geo-alt" aria-hidden="true"></i> <%= item.location_name || 'Sin asignar' %></p>
@@ -49,8 +54,8 @@
             <i class="bi bi-tag" aria-hidden="true"></i> <%= item.category_name || 'Sin categoría' %>
         </p>
     </div>
-    <div class="item-actions">
-        <% if (item.location_id) { %><a href="/items/<%= item.id %>/location" class="btn btn-info btn-item" title="Ver ubicación"><i class="bi bi-info-circle" aria-hidden="true"></i></a><% } %>
+    <div class="item-actions item-card-actions">
+        <% if (item.location_id) { %><a href="/items/<%= item.id %>/location" class="btn btn-info btn-item" title="Ver ubicación"><i class="bi bi-geo-alt" aria-hidden="true"></i></a><% } %>
         <a href="/items/<%= item.id %>/edit" class="btn btn-item">Editar</a>
         <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="¿Eliminar este ítem?">
             <button type="submit" class="btn btn-danger btn-item" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>

@@ -23,6 +23,34 @@ La aplicación quedará disponible en:
 http://localhost:3001
 ```
 
+### Probar desde un móvil
+
+El ordenador y el móvil deben estar conectados a la misma red Wi-Fi. Obtén la IP local del ordenador:
+
+```powershell
+ipconfig
+```
+
+Busca la dirección `IPv4`, por ejemplo `192.168.1.25`, y abre desde el móvil:
+
+```text
+http://192.168.1.25:3001
+```
+
+La aplicación escucha en `0.0.0.0`, pero Windows Firewall puede bloquear el puerto. En PowerShell como administrador, crea una regla de entrada:
+
+```powershell
+New-NetFirewallRule -DisplayName "Boxxed 3001" -Direction Inbound -Protocol TCP -LocalPort 3001 -Action Allow
+```
+
+Si usas Docker Desktop, comprueba que el puerto esté publicado con:
+
+```powershell
+docker compose ps
+```
+
+No funcionará desde la red móvil del teléfono si el ordenador está en Wi-Fi: ambos deben estar en la misma red local, sin aislamiento de clientes activado en el router.
+
 Comprobar el estado:
 
 ```bash

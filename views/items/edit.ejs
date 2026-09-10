@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 <h2>Editar Item</h2>
 <div class="card">
-    <form method="POST" action="/items/<%= item.id %>/edit" enctype="multipart/form-data">
+    <form id="edit-item-form" method="POST" action="/items/<%= item.id %>/edit" enctype="multipart/form-data">
         <label>Nombre del Item</label>
         <input type="text" name="name" value="<%= item.name %>" required>
 
@@ -61,11 +61,13 @@
         </div>
         </div>
         
-        <button type="submit" class="btn">Actualizar</button>
+    </form>
+    <div class="edit-actions">
+        <button type="submit" form="edit-item-form" class="btn">Actualizar</button>
         <a href="/items" class="btn btn-secondary">Cancelar</a>
-    </form>
-    <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form form-delete" data-confirm="¿Eliminar este ítem?">
-        <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ítem</button>
-    </form>
+        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="¿Eliminar este ítem?">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ítem</button>
+        </form>
+    </div>
 </div>
 <%- include('../partials/footer') %>
