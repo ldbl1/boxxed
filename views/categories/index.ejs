@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+<div class="header-bar">
+    <h2>Categorías</h2>
+    <a href="/categories/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva Categoría</a>
+</div>
+
+<input type="text" id="searchInput" class="search-input" onkeyup="filterItems('.tree-item')" placeholder="Buscar categoría...">
+
+<% function renderTree(nodes) { %>
+    <ul class="tree-list">
+    <% nodes.forEach(function(node) { %>
+        <li class="tree-item" data-search="<%= node.name.toLowerCase() %>">
+            <div class="tree-node">
+                <div>
+                    <% if (node.image) { %><img class="tree-image" src="/uploads/<%= node.image %>" alt=""><% } else { %><span class="tree-image image-placeholder"><i class="bi bi-tag" aria-hidden="true"></i></span><% } %>
+                    <span class="toggle-btn <%= node.children.length ? '' : 'toggle-btn-hidden' %>" onclick="toggleNode(this)">▼</span>
+                    <strong><%= node.name %></strong>
+                </div>
+                <div class="tree-actions">
+                    <a href="/categories/<%= node.id %>/edit" class="btn btn-small">Editar</a>
+                    <form method="POST" action="/categories/<%= node.id %>/delete" class="delete-form" data-confirm="¿Eliminar esta categoría? Sus hijos pasarán a ser principales.">
+                        <button type="submit" class="btn btn-danger btn-small" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <% if (node.children.length > 0) { %>
+                <div class="tree-children">
+                    <% renderTree(node.children) %>
+                </div>
+            <% } %>
+        </li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<div class="tree-root">
+    <% renderTree(tree) %>
+</div>
+<%- include('../partials/footer') %>

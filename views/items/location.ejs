@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<div class="header-bar">
+    <div>
+        <a href="/items" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i> Inventario</a>
+        <h2>Ubicación de <%= item.name %></h2>
+    </div>
+</div>
+
+<nav class="location-breadcrumb" aria-label="Ruta de ubicación">
+    <% trail.forEach(function(location, index) { %>
+        <% if (index) { %><span class="location-breadcrumb-separator">/</span><% } %>
+        <strong><%= location.name %></strong>
+    <% }); %>
+</nav>
+
+<div class="location-trail">
+    <% trail.forEach(function(location, index) { %>
+        <details class="location-step">
+            <summary class="location-step-heading">
+                <span class="location-step-number"><%= index + 1 %></span>
+                <h3><%= location.name %></h3>
+                <i class="bi bi-chevron-down location-step-chevron" aria-hidden="true"></i>
+            </summary>
+            <%- include('../partials/media-gallery', { mediaType: 'locations', mediaGallery: location.gallery, mediaId: location.id, sharedGallery: location.parentGallery, regionsEnabled: true, showPrimary: false, readOnly: true }) %>
+        </details>
+    <% }); %>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,38 @@
+<% const ownImages = mediaGallery ? mediaGallery.images : []; %>
+<% const mediaEntries = ownImages.map(function(filename) { return { filename: filename, shared: false, clip: sharedGallery && sharedGallery.images.includes(filename) ? (sharedGallery.regions[filename] || null) : null }; }).concat((sharedGallery ? sharedGallery.images : []).filter(function(filename) { return !ownImages.includes(filename); }).map(function(filename) { return { filename: filename, shared: true, clip: sharedGallery.regions[filename] || null }; })); %>
+<% if (mediaEntries.length) { %>
+    <div class="media-gallery <%= mediaType === 'locations' ? 'media-gallery-location' : '' %>" data-type="<%= mediaType %>" data-id="<%= mediaId %>">
+        <% mediaEntries.forEach(function(entry) { %>
+            <% const filename = entry.filename; const region = regionsEnabled ? (mediaGallery && mediaGallery.regions[filename] || null) : null; %>
+            <article class="media-card" data-filename="<%= filename %>" data-shared="<%= entry.shared %>" data-clip='<%= JSON.stringify(entry.clip || { x: 0, y: 0, width: 1, height: 1 }) %>' data-region='<%= JSON.stringify(region) %>'>
+                <div class="media-frame media-crop-frame">
+                    <img class="media-image" src="/uploads/<%= filename %>" alt="Imagen subida">
+                    <% if (!entry.shared && !readOnly) { %><button type="button" class="media-delete-button" data-media-action="delete" title="Eliminar foto"><i class="bi bi-trash" aria-hidden="true"></i></button><% } %>
+                </div>
+                <% if (!entry.shared && showPrimary) { %><label class="media-primary-label">
+                    <input type="radio" name="primary_image" value="<%= filename %>" <%= mediaGallery.primary === filename ? 'checked' : '' %>> Foto principal
+                </label><% } %>
+                <% if (regionsEnabled && !readOnly) { %><button type="button" class="btn btn-secondary media-region-button" data-media-action="region"><i class="bi bi-bounding-box" aria-hidden="true"></i> <%= entry.shared ? 'Seleccionar dentro de esta zona' : 'Marcar zona' %></button><% } %>
+                <% if (regionsEnabled) { %><dialog class="region-dialog">
+                    <div class="region-editor">
+                        <div class="region-canvas" data-clip='<%= JSON.stringify(entry.clip || { x: 0, y: 0, width: 1, height: 1 }) %>'>
+                            <img class="region-image" src="/uploads/<%= filename %>" alt="Seleccionar zona">
+                            <span class="region-selection"></span>
+                        </div>
+                        <div class="region-actions">
+                            <button type="button" class="btn btn-secondary" data-region-action="cancel">Cancelar</button>
+                            <button type="button" class="btn" data-region-action="save">Guardar zona</button>
+                        </div>
+                    </div>
+                </dialog><% } %>
+            </article>
+        <% }); %>
+    </div>
+<% } else { %>
+    <div class="media-gallery <%= mediaType === 'locations' ? 'media-gallery-location' : '' %>">
+        <div class="media-empty-placeholder">
+            <i class="bi <%= mediaType === 'items' ? 'bi-box-seam' : mediaType === 'categories' ? 'bi-tag' : 'bi-geo-alt' %>" aria-hidden="true"></i>
+            <span>Sin foto</span>
+        </div>
+    </div>
+<% } %>

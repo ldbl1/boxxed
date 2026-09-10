@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+<h2>Editar Categoría</h2>
+<div class="card">
+    <form method="POST" action="/categories/<%= category.id %>/edit" enctype="multipart/form-data">
+        <label>Nombre de la Categoría</label>
+        <input type="text" name="name" value="<%= category.name %>" required>
+
+        <label for="category-image">Imagen</label>
+        <% if (!category.gallery.images.length) { %><input id="category-image" type="file" name="image" accept="image/*"><% } %>
+        <div class="upload-preview" data-upload-preview></div>
+        <% const mediaType = 'categories'; const mediaGallery = category.gallery; const mediaId = category.id; %>
+        <%- include('../partials/media-gallery', { mediaType: mediaType, mediaGallery: mediaGallery, mediaId: mediaId, sharedGallery: null, regionsEnabled: false, showPrimary: false, readOnly: false }) %>
+        
+        <label>Pertenece a (Jerarquía)</label>
+        <div class="hierarchy-select">
+            <select name="parent_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
+                <option value="">-- Categoría Principal --</option>
+                <% categories.forEach(function(cat) { %>
+                    <option value="<%= cat.id %>" data-full-path="<%= cat.fullPath %>" <%= category.parent_id == cat.id ? 'selected' : '' %>><%= cat.name %></option>
+                <% }); %>
+            </select>
+            <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
+            <div class="hierarchy-select-menu" role="listbox" hidden>
+                <button type="button" class="hierarchy-select-option" data-value="">-- Categoría Principal --</button>
+                <% categories.forEach(function(cat) { %>
+                    <button type="button" class="hierarchy-select-option" data-value="<%= cat.id %>" data-label="<%= cat.fullPath %>" data-depth="<%= cat.depth %>"><%= cat.name %></button>
+                <% }); %>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn">Actualizar</button>
+        <a href="/categories" class="btn btn-secondary">Cancelar</a>
+    </form>
+    <form method="POST" action="/categories/<%= category.id %>/delete" class="delete-form form-delete" data-confirm="¿Eliminar esta categoría? Sus hijos pasarán a ser principales.">
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar categoría</button>
+    </form>
+</div>
+<%- include('../partials/footer') %>

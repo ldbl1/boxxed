@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+<div class="header-bar">
+    <h2>Inventario</h2>
+    <a href="/items/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo Item</a>
+</div>
+
+<label class="search-label" for="itemsSearch">Buscar por nombre, categoría o ubicación</label>
+<input type="search" id="itemsSearch" class="search-input" placeholder="Buscar items..." oninput="filterItems('.item-searchable', 'itemsSearch', 'items-empty')">
+
+<div class="inventory-filters">
+    <div class="multi-filter" data-filter-key="category">
+        <button type="button" class="multi-filter-button" aria-expanded="false">Todas las categorías</button>
+        <div class="multi-filter-menu" hidden>
+            <input type="search" class="multi-filter-search" placeholder="Buscar categoría..." aria-label="Buscar categoría">
+            <div class="multi-filter-options">
+                <% categories.forEach(function(cat) { %>
+                    <label class="multi-filter-option hierarchy-depth-<%= cat.depth %>" data-label="<%= cat.fullPath.toLowerCase() %>">
+                        <input type="checkbox" value="<%= cat.id %>">
+                        <span><%= cat.name %></span>
+                    </label>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+    <div class="multi-filter" data-filter-key="location">
+        <button type="button" class="multi-filter-button" aria-expanded="false">Todas las ubicaciones</button>
+        <div class="multi-filter-menu" hidden>
+            <input type="search" class="multi-filter-search" placeholder="Buscar ubicación..." aria-label="Buscar ubicación">
+            <div class="multi-filter-options">
+                <% locations.forEach(function(loc) { %>
+                    <label class="multi-filter-option hierarchy-depth-<%= loc.depth %>" data-label="<%= loc.fullPath.toLowerCase() %>">
+                        <input type="checkbox" value="<%= loc.id %>">
+                        <span><%= loc.name %></span>
+                    </label>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% items.forEach(function(item) { %>
+    <div class="item-row item-searchable" data-category-id="<%= item.category_id || '' %>" data-location-id="<%= item.location_id || '' %>" data-category-filter-ids="<%= item.category_filter_ids.join(',') %>" data-location-filter-ids="<%= item.location_filter_ids.join(',') %>" data-search="<%= [item.name, item.category_name, item.location_name].join(' ').toLowerCase() %>">
+    <div>
+        <% if (item.image) { %><img class="item-image" src="/uploads/<%= item.image %>" alt=""><% } else { %><span class="item-image image-placeholder"><i class="bi bi-box-seam" aria-hidden="true"></i></span><% } %>
+        <strong class="item-name"><a href="/items/<%= item.id %>/edit"><%= item.name %></a> <span class="item-quantity">(x<%= item.quantity %>)</span></strong>
+        <p class="item-meta">
+            <i class="bi bi-geo-alt" aria-hidden="true"></i> <%= item.location_name || 'Sin asignar' %></p>
+        <p class="item-meta">
+            <i class="bi bi-tag" aria-hidden="true"></i> <%= item.category_name || 'Sin categoría' %>
+        </p>
+    </div>
+    <div class="item-actions">
+        <% if (item.location_id) { %><a href="/items/<%= item.id %>/location" class="btn btn-info btn-item" title="Ver ubicación"><i class="bi bi-info-circle" aria-hidden="true"></i></a><% } %>
+        <a href="/items/<%= item.id %>/edit" class="btn btn-item">Editar</a>
+        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="¿Eliminar este ítem?">
+            <button type="submit" class="btn btn-danger btn-item" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>
+        </form>
+    </div>
+</div>
+<% }); %>
+<div id="items-empty" class="empty-state is-hidden">No hay items que coincidan con la búsqueda.</div>
+<%- include('../partials/footer') %>
