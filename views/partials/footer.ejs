@@ -98,6 +98,20 @@
     });
     inventorySearch?.addEventListener('input', applyInventoryFilters);
 
+    function clearInventoryFilters() {
+        if (!inventorySearch) return;
+        inventorySearch.value = '';
+        inventoryFilters.forEach(function (filter) {
+            filter.querySelectorAll('input[type="checkbox"]').forEach(input => { input.checked = false; });
+            filter.querySelector('.multi-filter-search').value = '';
+            filter.querySelectorAll('.multi-filter-option').forEach(option => option.classList.remove('is-hidden'));
+            filter.querySelector('.multi-filter-button').textContent = filter.dataset.filterKey === 'category' ? 'Todas las categorías' : 'Todas las ubicaciones';
+            filter.querySelector('.multi-filter-menu').hidden = true;
+            filter.querySelector('.multi-filter-button').setAttribute('aria-expanded', 'false');
+        });
+        applyInventoryFilters();
+    }
+
     document.querySelectorAll('.hierarchy-select').forEach(function (container) {
         let nativeSelect = container.querySelector('.hierarchy-select-native');
         let displayButton = container.querySelector('.hierarchy-select-button');
@@ -188,13 +202,20 @@
         function applyCrop(frame, image, clip) {
             const render = function () {
                 if (!image.naturalWidth || !image.naturalHeight) return;
-                frame.style.aspectRatio = `${image.naturalWidth * clip.width} / ${image.naturalHeight * clip.height}`;
-                if (clip.x === 0 && clip.y === 0 && clip.width === 1 && clip.height === 1) return;
-                frame.classList.add('is-cropped');
-                image.style.width = `${100 / clip.width}%`;
-                image.style.height = `${100 / clip.height}%`;
-                image.style.left = `${-clip.x * 100 / clip.width}%`;
-                image.style.top = `${-clip.y * 100 / clip.height}%`;
+                const availableWidth = Math.min(900, frame.parentElement?.clientWidth || 900);
+                const scale = Math.min(1, availableWidth / image.naturalWidth);
+                const sourceWidth = image.naturalWidth * scale;
+                const sourceHeight = image.naturalHeight * scale;
+                const frameWidth = sourceWidth * clip.width;
+                const frameHeight = sourceHeight * clip.height;
+
+                frame.style.width = `${frameWidth}px`;
+                frame.style.height = `${frameHeight}px`;
+                image.style.width = `${sourceWidth}px`;
+                image.style.height = `${sourceHeight}px`;
+                image.style.left = `${-sourceWidth * clip.x}px`;
+                image.style.top = `${-sourceHeight * clip.y}px`;
+                frame.classList.toggle('is-cropped', clip.x !== 0 || clip.y !== 0 || clip.width !== 1 || clip.height !== 1);
             };
             image.addEventListener('load', render, { once: true });
             if (image.complete) render();
@@ -320,6 +341,14 @@
             });
         });
     });
+
+    function goBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '/items';
+        }
+    }
 </script>
 </body>
 

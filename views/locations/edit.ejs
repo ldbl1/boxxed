@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 <h2>Editar Ubicación</h2>
 <div class="card">
-    <form method="POST" action="/locations/<%= location.id %>/edit" enctype="multipart/form-data">
+    <form id="edit-location-form" method="POST" action="/locations/<%= location.id %>/edit" enctype="multipart/form-data">
         <label>Nombre</label>
         <input type="text" name="name" value="<%= location.name %>" required>
 
@@ -30,11 +30,13 @@
             </div>
         </div>
         
-        <button type="submit" class="btn">Actualizar</button>
+    </form>
+    <div class="edit-actions">
+        <button type="submit" form="edit-location-form" class="btn">Actualizar</button>
         <a href="/locations" class="btn btn-secondary">Cancelar</a>
-    </form>
-    <form method="POST" action="/locations/<%= location.id %>/delete" class="delete-form form-delete" data-confirm="¿Eliminar esta ubicación? Sus hijos pasarán a ser principales.">
-        <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ubicación</button>
-    </form>
+        <form method="POST" action="/locations/<%= location.id %>/delete" class="delete-form" data-confirm="¿Eliminar esta ubicación? Sus hijos pasarán a ser principales.">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ubicación</button>
+        </form>
+    </div>
 </div>
 <%- include('../partials/footer') %>

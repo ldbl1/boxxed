@@ -354,4 +354,5 @@ app.get('/', (req, res) => res.redirect('/items'));
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 const port = Number(process.env.PORT) || 3001;
-app.listen(port, () => console.log(`Servidor corriendo en http://localhost:${port}`));
+const host = process.env.HOST || '0.0.0.0';
+app.listen(port, host, () => console.log(`Servidor corriendo en http://${host}:${port}`));
