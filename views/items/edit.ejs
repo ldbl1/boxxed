@@ -1,36 +1,36 @@
 <%- include('../partials/header') %>
-<h2>Editar Item</h2>
+<h2><%= t('edit') %> <%= t('itemName') %></h2>
 <div class="card">
     <form id="edit-item-form" method="POST" action="/items/<%= item.id %>/edit" enctype="multipart/form-data">
-        <label>Nombre del Item</label>
+        <label><%= t('itemName') %></label>
         <input type="text" name="name" value="<%= item.name %>" required>
 
-        <label for="item-image">Imágenes</label>
+        <label for="item-image"><%= t('images') %></label>
         <input id="item-image" type="file" name="images" accept="image/*" multiple>
         <div class="upload-preview" data-upload-preview></div>
         <% const mediaType = 'items'; const mediaGallery = item.gallery; const mediaId = item.id; %>
         <%- include('../partials/media-gallery', { mediaType: mediaType, mediaGallery: mediaGallery, mediaId: mediaId, sharedGallery: null, regionsEnabled: false, showPrimary: true, readOnly: false }) %>
         
-        <label>Cantidad</label>
+        <label><%= t('quantity') %></label>
         <input type="number" name="quantity" value="<%= item.quantity %>" min="0" required>
         
-        <label>Ubicación</label>
+        <label><%= t('location') %></label>
         <div class="hierarchy-field" data-preview-type="location" data-info-url="/items/<%= item.id %>/location">
             <div class="hierarchy-preview" data-hierarchy-preview hidden>
-                <img data-hierarchy-image alt="Imagen de la ubicación seleccionada">
+                <img data-hierarchy-image alt="<%= t('selectedLocation') %>">
                 <span class="hierarchy-image-placeholder" data-hierarchy-placeholder><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
-                <a class="hierarchy-info-button" data-hierarchy-info title="Ver ubicación y zonas"><i class="bi bi-info-circle" aria-hidden="true"></i></a>
+                <a class="hierarchy-info-button" data-hierarchy-info title="<%= t('selectedLocation') %>"><i class="bi bi-info-circle" aria-hidden="true"></i></a>
             </div>
         <div class="hierarchy-select">
             <select name="location_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
-                <option value="">-- Raíz (Sin asignar) --</option>
+                <option value=""><%= t('rootUnassigned') %></option>
                 <% locations.forEach(function(loc) { %>
                     <option value="<%= loc.id %>" data-full-path="<%= loc.fullPath %>" data-image="<%= loc.image || '' %>" data-icon="bi-geo-alt" <%= item.location_id == loc.id ? 'selected' : '' %>><%= loc.name %></option>
                 <% }); %>
             </select>
             <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
             <div class="hierarchy-select-menu" role="listbox" hidden>
-                <button type="button" class="hierarchy-select-option" data-value="">-- Raíz (Sin asignar) --</button>
+                <button type="button" class="hierarchy-select-option" data-value=""><%= t('rootUnassigned') %></button>
                 <% locations.forEach(function(loc) { %>
                     <button type="button" class="hierarchy-select-option" data-value="<%= loc.id %>" data-label="<%= loc.fullPath %>" data-depth="<%= loc.depth %>"><%= loc.name %></button>
                 <% }); %>
@@ -38,22 +38,22 @@
         </div>
         </div>
         
-        <label>Categoría</label>
+        <label><%= t('category') %></label>
         <div class="hierarchy-field" data-preview-type="category">
             <div class="hierarchy-preview" data-hierarchy-preview hidden>
-                <img data-hierarchy-image alt="Imagen de la categoría seleccionada">
+                <img data-hierarchy-image alt="<%= t('category') %>">
                 <span class="hierarchy-image-placeholder" data-hierarchy-placeholder><i class="bi bi-tag" aria-hidden="true"></i></span>
             </div>
         <div class="hierarchy-select">
             <select name="category_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
-                <option value="">-- Raíz (Sin asignar) --</option>
+                <option value=""><%= t('rootUnassigned') %></option>
                 <% categories.forEach(function(cat) { %>
                     <option value="<%= cat.id %>" data-full-path="<%= cat.fullPath %>" data-image="<%= cat.image || '' %>" data-icon="bi-tag" <%= item.category_id == cat.id ? 'selected' : '' %>><%= cat.name %></option>
                 <% }); %>
             </select>
             <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
             <div class="hierarchy-select-menu" role="listbox" hidden>
-                <button type="button" class="hierarchy-select-option" data-value="">-- Raíz (Sin asignar) --</button>
+                <button type="button" class="hierarchy-select-option" data-value=""><%= t('rootUnassigned') %></button>
                 <% categories.forEach(function(cat) { %>
                     <button type="button" class="hierarchy-select-option" data-value="<%= cat.id %>" data-label="<%= cat.fullPath %>" data-depth="<%= cat.depth %>"><%= cat.name %></button>
                 <% }); %>
@@ -63,10 +63,10 @@
         
     </form>
     <div class="edit-actions">
-        <button type="submit" form="edit-item-form" class="btn">Actualizar</button>
-        <a href="/items" class="btn btn-secondary">Cancelar</a>
-        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="¿Eliminar este ítem?">
-            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar ítem</button>
+        <button type="submit" form="edit-item-form" class="btn"><%= t('update') %></button>
+        <a href="/items" class="btn btn-secondary"><%= t('cancel') %></a>
+        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="<%= t('deleteItemConfirm') %>">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> <%= t('delete') %></button>
         </form>
     </div>
 </div>

@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+<div class="header-bar">
+    <h2><%= t('settings') %></h2>
+</div>
+
+<% if (typeof query !== 'undefined' && query.saved) { %>
+    <div class="success-message"><%= t('settingsSaved') %></div>
+<% } %>
+
+<form method="POST" action="/settings" class="card settings-form">
+    <label for="accentColor"><%= t('accentColor') %></label>
+    <div class="accent-themes">
+        <% [['rose', '#e8a4b8'], ['mint', '#9acfc0'], ['sky', '#9fc5e8'], ['peach', '#f2bd9b']].forEach(function(theme) { %>
+            <label class="accent-theme">
+                <input type="radio" name="accentColor" value="<%= theme[1] %>" <%= settings.accentColor === theme[1] ? 'checked' : '' %>>
+                <span class="accent-swatch" style="--swatch-color: <%= theme[1] %>;"></span>
+                <span><%= t(theme[0]) %></span>
+            </label>
+        <% }); %>
+    </div>
+
+    <label for="language"><%= t('language') %></label>
+    <select id="language" name="language">
+        <option value="es" <%= language === 'es' ? 'selected' : '' %>><%= t('spanish') %></option>
+        <option value="en" <%= language === 'en' ? 'selected' : '' %>><%= t('english') %></option>
+    </select>
+
+    <button type="submit" class="btn"><i class="bi bi-check-lg" aria-hidden="true"></i> <%= t('save') %></button>
+</form>
+<%- include('partials/footer') %>

@@ -1,17 +1,17 @@
 <%- include('../partials/header') %>
 <div class="header-bar">
-    <h2>Inventario</h2>
-    <a href="/items/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo Item</a>
+    <h2><%= t('inventory') %></h2>
+    <a href="/items/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> <%= t('newItem') %></a>
 </div>
 
-<label class="search-label" for="itemsSearch">Buscar por nombre, categoría o ubicación</label>
-<input type="search" id="itemsSearch" class="search-input" placeholder="Buscar items..." oninput="filterItems('.item-searchable', 'itemsSearch', 'items-empty')">
+<label class="search-label" for="itemsSearch"><%= t('searchBy') %></label>
+<input type="search" id="itemsSearch" class="search-input" placeholder="<%= t('searchItems') %>" oninput="filterItems('.item-searchable', 'itemsSearch', 'items-empty')">
 
 <div class="inventory-filters">
     <div class="multi-filter" data-filter-key="category">
-        <button type="button" class="multi-filter-button" aria-expanded="false">Todas las categorías</button>
+        <button type="button" class="multi-filter-button" aria-expanded="false"><%= t('allCategories') %></button>
         <div class="multi-filter-menu" hidden>
-            <input type="search" class="multi-filter-search" placeholder="Buscar categoría..." aria-label="Buscar categoría">
+            <input type="search" class="multi-filter-search" placeholder="<%= t('searchCategory') %>" aria-label="<%= t('searchCategory') %>">
             <div class="multi-filter-options">
                 <% categories.forEach(function(cat) { %>
                     <label class="multi-filter-option hierarchy-depth-<%= cat.depth %>" data-label="<%= cat.fullPath.toLowerCase() %>">
@@ -23,9 +23,9 @@
         </div>
     </div>
     <div class="multi-filter" data-filter-key="location">
-        <button type="button" class="multi-filter-button" aria-expanded="false">Todas las ubicaciones</button>
+        <button type="button" class="multi-filter-button" aria-expanded="false"><%= t('allLocations') %></button>
         <div class="multi-filter-menu" hidden>
-            <input type="search" class="multi-filter-search" placeholder="Buscar ubicación..." aria-label="Buscar ubicación">
+            <input type="search" class="multi-filter-search" placeholder="<%= t('searchLocation') %>" aria-label="<%= t('searchLocation') %>">
             <div class="multi-filter-options">
                 <% locations.forEach(function(loc) { %>
                     <label class="multi-filter-option hierarchy-depth-<%= loc.depth %>" data-label="<%= loc.fullPath.toLowerCase() %>">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <button type="button" class="btn btn-secondary clear-filters-button" onclick="clearInventoryFilters()">
-        <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
+        <i class="bi bi-x-circle" aria-hidden="true"></i> <%= t('clearFilters') %>
     </button>
 </div>
 
@@ -49,19 +49,19 @@
     <div class="item-card-details">
         <strong class="item-name"><a href="/items/<%= item.id %>/edit"><%= item.name %></a> <span class="item-quantity">(x<%= item.quantity %>)</span></strong>
         <p class="item-meta">
-            <i class="bi bi-geo-alt" aria-hidden="true"></i> <%= item.location_name || 'Sin asignar' %></p>
+            <i class="bi bi-geo-alt" aria-hidden="true"></i> <%= item.location_name || t('noLocation') %></p>
         <p class="item-meta">
-            <i class="bi bi-tag" aria-hidden="true"></i> <%= item.category_name || 'Sin categoría' %>
+            <i class="bi bi-tag" aria-hidden="true"></i> <%= item.category_name || t('noCategory') %>
         </p>
     </div>
     <div class="item-actions item-card-actions">
-        <% if (item.location_id) { %><a href="/items/<%= item.id %>/location" class="btn btn-info btn-item" title="Ver ubicación"><i class="bi bi-geo-alt" aria-hidden="true"></i></a><% } %>
-        <a href="/items/<%= item.id %>/edit" class="btn btn-item">Editar</a>
-        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="¿Eliminar este ítem?">
-            <button type="submit" class="btn btn-danger btn-item" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>
+        <% if (item.location_id) { %><a href="/items/<%= item.id %>/location" class="btn btn-info btn-item" title="<%= t('selectedLocation') %>"><i class="bi bi-geo-alt" aria-hidden="true"></i></a><% } %>
+        <a href="/items/<%= item.id %>/edit" class="btn btn-item"><%= t('edit') %></a>
+        <form method="POST" action="/items/<%= item.id %>/delete" class="delete-form" data-confirm="<%= t('deleteItemConfirm') %>">
+            <button type="submit" class="btn btn-danger btn-item" title="<%= t('delete') %>"><i class="bi bi-trash" aria-hidden="true"></i></button>
         </form>
     </div>
 </div>
 <% }); %>
-<div id="items-empty" class="empty-state is-hidden">No hay items que coincidan con la búsqueda.</div>
+<div id="items-empty" class="empty-state is-hidden"><%= t('noMatchingItems') %></div>
 <%- include('../partials/footer') %>
