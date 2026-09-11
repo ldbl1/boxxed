@@ -7,7 +7,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
-RUN npm_config_build_from_source=true npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts \
+    && npm rebuild sqlite3 --build-from-source \
+    && ! strings node_modules/sqlite3/build/Release/node_sqlite3.node | grep -q 'GLIBC_2.38'
 
 FROM node:22-bookworm-slim
 
