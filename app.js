@@ -4,12 +4,105 @@ const fs = require('fs');
 const multer = require('multer');
 const db = require('./database');
 
+const accentThemes = {
+    rose: '#e8a4b8',
+    mint: '#9acfc0',
+    sky: '#9fc5e8',
+    peach: '#f2bd9b'
+};
+const accentStrongColors = {
+    '#e8a4b8': '#9f4f6b',
+    '#9acfc0': '#347d6d',
+    '#9fc5e8': '#3d70a3',
+    '#f2bd9b': '#a45f37'
+};
+const defaultSettings = { accentColor: accentThemes.sky, language: 'es' };
+const settings = { ...defaultSettings };
+const translations = {
+    es: {
+        items: 'Items', locations: 'Ubicaciones', categories: 'Categorías', settings: 'Configuración',
+        accentColor: 'Color de acento', language: 'Idioma', spanish: 'Español', english: 'Inglés',
+        settingsSaved: 'Configuración guardada',
+        rose: 'Rosa suave', mint: 'Menta', sky: 'Azul cielo', peach: 'Melocotón',
+        inventory: 'Inventario', newItem: 'Nuevo item', searchBy: 'Buscar por nombre, categoría o ubicación',
+        searchItems: 'Buscar items...', allCategories: 'Todas las categorías', allLocations: 'Todas las ubicaciones',
+        searchCategory: 'Buscar categoría...', searchLocation: 'Buscar ubicación...', clearFilters: 'Limpiar filtros',
+        noMatchingItems: 'No hay items que coincidan con la búsqueda.', newCategory: 'Nueva categoría',
+        newLocation: 'Nueva ubicación', search: 'Buscar', edit: 'Editar', delete: 'Eliminar',
+        save: 'Guardar', cancel: 'Cancelar', update: 'Actualizar', name: 'Nombre', images: 'Imágenes',
+        image: 'Imagen', quantity: 'Cantidad', location: 'Ubicación', category: 'Categoría',
+        noLocation: 'Sin asignar', noCategory: 'Sin categoría', rootUnassigned: '-- Raíz (Sin asignar) --',
+        newItemTitle: 'Registrar nuevo item', itemName: 'Nombre del item', itemExample: 'Ej: Disco Duro SSD 1TB',
+        newCategoryTitle: 'Nueva categoría', editCategoryTitle: 'Editar categoría', categoryName: 'Nombre de la categoría',
+        categoryExample: 'Ej: Discos Duros', newLocationTitle: 'Nueva ubicación', editLocationTitle: 'Editar ubicación',
+        locationName: 'Nombre', locationExample: 'Ej: Cajón 1', belongsTo: 'Pertenece a (Jerarquía)',
+        mainCategory: '-- Categoría principal --', mainLocation: '-- Ubicación principal --',
+        deleteItemConfirm: '¿Eliminar este ítem?', deleteCategoryConfirm: '¿Eliminar esta categoría? Sus hijos pasarán a ser principales.',
+        deleteLocationConfirm: '¿Eliminar esta ubicación? Sus hijos pasarán a ser principales.',
+        back: 'Volver', itemLocation: 'Ubicación de', locationPath: 'Ruta de ubicación',
+        uploadedImage: 'Imagen subida', deletePhoto: 'Eliminar foto', deletePhotoConfirm: '¿Eliminar esta foto?', primaryPhoto: 'Foto principal',
+        preview: 'Vista previa', primary: 'Principal',
+        selectZone: 'Seleccionar dentro de esta zona', markZone: 'Marcar zona', noPhoto: 'Sin foto',
+        selectZoneTitle: 'Seleccionar zona', saveZone: 'Guardar zona', selectedLocation: 'Ver ubicación y zonas',
+        selectedCount: 'seleccionada', selectedCountPlural: 'seleccionadas'
+    },
+    en: {
+        items: 'Items', locations: 'Locations', categories: 'Categories', settings: 'Settings',
+        accentColor: 'Accent color', language: 'Language', spanish: 'Spanish', english: 'English',
+        settingsSaved: 'Settings saved',
+        rose: 'Soft rose', mint: 'Mint', sky: 'Sky blue', peach: 'Peach',
+        inventory: 'Inventory', newItem: 'New item', searchBy: 'Search by name, category or location',
+        searchItems: 'Search items...', allCategories: 'All categories', allLocations: 'All locations',
+        searchCategory: 'Search category...', searchLocation: 'Search location...', clearFilters: 'Clear filters',
+        noMatchingItems: 'No items match your search.', newCategory: 'New category', newLocation: 'New location',
+        search: 'Search', edit: 'Edit', delete: 'Delete', save: 'Save', cancel: 'Cancel', update: 'Update',
+        name: 'Name', images: 'Images', image: 'Image', quantity: 'Quantity', location: 'Location', category: 'Category',
+        noLocation: 'Unassigned', noCategory: 'No category', rootUnassigned: '-- Root (Unassigned) --',
+        newItemTitle: 'Register new item', itemName: 'Item name', itemExample: 'E.g. 1TB SSD hard drive',
+        newCategoryTitle: 'New category', editCategoryTitle: 'Edit category', categoryName: 'Category name',
+        categoryExample: 'E.g. Hard drives', newLocationTitle: 'New location', editLocationTitle: 'Edit location',
+        locationName: 'Name', locationExample: 'E.g. Drawer 1', belongsTo: 'Belongs to (Hierarchy)',
+        mainCategory: '-- Main category --', mainLocation: '-- Main location --',
+        deleteItemConfirm: 'Delete this item?', deleteCategoryConfirm: 'Delete this category? Its children will become top-level.',
+        deleteLocationConfirm: 'Delete this location? Its children will become top-level.',
+        back: 'Back', itemLocation: 'Location of', locationPath: 'Location path',
+        uploadedImage: 'Uploaded image', deletePhoto: 'Delete photo', deletePhotoConfirm: 'Delete this photo?', primaryPhoto: 'Primary photo',
+        preview: 'Preview', primary: 'Primary',
+        selectZone: 'Select within this zone', markZone: 'Mark zone', noPhoto: 'No photo',
+        selectZoneTitle: 'Select zone', saveZone: 'Save zone', selectedLocation: 'View location and zones',
+        selectedCount: 'selected', selectedCountPlural: 'selected'
+    }
+};
+
+function readCookie(header, name) {
+    const match = String(header || '').match(new RegExp(`(?:^|;\\s*)${name}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+function currentLanguage(req) {
+    const language = readCookie(req.headers.cookie, 'boxxed_lang');
+    return language === 'en' || language === 'es' ? language : settings.language;
+}
+
+db.all('SELECT key, value FROM settings', (error, rows) => {
+    if (!error) rows.forEach(row => { if (row.key in settings && (row.key !== 'accentColor' || Object.values(accentThemes).includes(row.value))) settings[row.key] = row.value; });
+});
+
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use((req, res, next) => {
+    const language = currentLanguage(req);
+    res.locals.settings = settings;
+    res.locals.accentStrong = accentStrongColors[settings.accentColor] || accentStrongColors[defaultSettings.accentColor];
+    res.locals.language = language;
+    res.locals.t = key => translations[language][key] || translations.es[key] || key;
+    next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/css', express.static(path.join(__dirname, 'views', 'partials')));
+app.get('/logo.svg', (req, res) => res.sendFile(path.join(__dirname, 'views', 'logo.svg')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const upload = multer({
@@ -346,6 +439,20 @@ app.post('/media/locations/:id/link', (req, res) => {
             const primary = gallery.primary || req.body.filename;
             db.run('UPDATE locations SET images = ?, primary_image = ?, image = ? WHERE id = ?', [JSON.stringify(gallery.images), primary, primary, req.params.id], () => res.json({ ok: true }));
         });
+    });
+});
+
+app.get('/settings', (req, res) => res.render('settings', { query: req.query }));
+
+app.post('/settings', (req, res) => {
+    const accentColor = Object.values(accentThemes).includes(req.body.accentColor) ? req.body.accentColor : defaultSettings.accentColor;
+    const language = req.body.language === 'en' ? 'en' : 'es';
+    db.run('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value', ['accentColor', accentColor]);
+    db.run('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value', ['language', language], () => {
+        settings.accentColor = accentColor;
+        settings.language = language;
+        res.setHeader('Set-Cookie', `boxxed_lang=${language}; Path=/; Max-Age=31536000; SameSite=Lax`);
+        res.redirect('/settings?saved=1');
     });
 });
 

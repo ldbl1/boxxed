@@ -91,7 +91,7 @@
         filter.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
             checkbox.addEventListener('change', function () {
                 const count = filter.querySelectorAll('input[type="checkbox"]:checked').length;
-                button.textContent = count ? `${count} seleccionada${count === 1 ? '' : 's'}` : defaultLabel;
+                button.textContent = count ? `${count} <%= t('selectedCount') %>${count === 1 ? '' : '<%= t('selectedCountPlural') %>'}` : defaultLabel;
                 applyInventoryFilters();
             });
         });
@@ -105,7 +105,7 @@
             filter.querySelectorAll('input[type="checkbox"]').forEach(input => { input.checked = false; });
             filter.querySelector('.multi-filter-search').value = '';
             filter.querySelectorAll('.multi-filter-option').forEach(option => option.classList.remove('is-hidden'));
-            filter.querySelector('.multi-filter-button').textContent = filter.dataset.filterKey === 'category' ? 'Todas las categorías' : 'Todas las ubicaciones';
+            filter.querySelector('.multi-filter-button').textContent = filter.dataset.filterKey === 'category' ? '<%= t('allCategories') %>' : '<%= t('allLocations') %>';
             filter.querySelector('.multi-filter-menu').hidden = true;
             filter.querySelector('.multi-filter-button').setAttribute('aria-expanded', 'false');
         });
@@ -252,7 +252,7 @@
         gallery.querySelectorAll('[data-media-action="delete"]').forEach(function (button) {
             button.addEventListener('click', async function () {
                 const card = button.closest('.media-card');
-                if (!window.confirm('¿Eliminar esta foto?')) return;
+                if (!window.confirm('<%= t('deletePhotoConfirm') %>')) return;
                 const response = await fetch(`/media/${gallery.dataset.type}/${gallery.dataset.id}/delete`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ filename: card.dataset.filename })
@@ -334,9 +334,9 @@
                 const label = document.createElement('label');
                 label.className = 'upload-preview-card';
                 const primaryControl = input.multiple
-                    ? `<span><input type="radio" name="primary_index" value="${index}" ${index === 0 ? 'checked' : ''}> Principal</span>`
+                    ? `<span><input type="radio" name="primary_index" value="${index}" ${index === 0 ? 'checked' : ''}> <%= t('primary') %></span>`
                     : '';
-                label.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Vista previa">${primaryControl}`;
+                label.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="<%= t('preview') %>">${primaryControl}`;
                 preview.appendChild(label);
             });
         });

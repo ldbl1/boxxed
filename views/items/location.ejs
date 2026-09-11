@@ -1,12 +1,12 @@
 <%- include('../partials/header') %>
 <div class="header-bar">
     <div>
-        <button type="button" class="back-link back-button" onclick="goBack()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver</button>
-        <h2>Ubicación de <%= item.name %></h2>
+        <button type="button" class="back-link back-button" onclick="goBack()"><i class="bi bi-arrow-left" aria-hidden="true"></i> <%= t('back') %></button>
+        <h2><%= t('itemLocation') %> <%= item.name %></h2>
     </div>
 </div>
 
-<nav class="location-breadcrumb" aria-label="Ruta de ubicación">
+<nav class="location-breadcrumb" aria-label="<%= t('locationPath') %>">
     <% trail.forEach(function(location, index) { %>
         <% if (index) { %><span class="location-breadcrumb-separator">></span><% } %>
         <strong><%= location.name %></strong>

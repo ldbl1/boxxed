@@ -1,10 +1,10 @@
 <%- include('../partials/header') %>
 <div class="header-bar">
-    <h2>Categorías</h2>
-    <a href="/categories/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva Categoría</a>
+    <h2><%= t('categories') %></h2>
+    <a href="/categories/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> <%= t('newCategory') %></a>
 </div>
 
-<input type="text" id="searchInput" class="search-input" onkeyup="filterItems('.tree-item')" placeholder="Buscar categoría...">
+<input type="text" id="searchInput" class="search-input" onkeyup="filterItems('.tree-item')" placeholder="<%= t('searchCategory') %>">
 
 <% function renderTree(nodes) { %>
     <ul class="tree-list">
@@ -17,9 +17,9 @@
                     <strong><%= node.name %></strong>
                 </div>
                 <div class="tree-actions">
-                    <a href="/categories/<%= node.id %>/edit" class="btn btn-small">Editar</a>
-                    <form method="POST" action="/categories/<%= node.id %>/delete" class="delete-form" data-confirm="¿Eliminar esta categoría? Sus hijos pasarán a ser principales.">
-                        <button type="submit" class="btn btn-danger btn-small" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                    <a href="/categories/<%= node.id %>/edit" class="btn btn-small"><%= t('edit') %></a>
+                    <form method="POST" action="/categories/<%= node.id %>/delete" class="delete-form" data-confirm="<%= t('deleteCategoryConfirm') %>">
+                        <button type="submit" class="btn btn-danger btn-small" title="<%= t('delete') %>"><i class="bi bi-trash" aria-hidden="true"></i></button>
                     </form>
                 </div>
             </div>

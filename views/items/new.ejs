@@ -1,46 +1,46 @@
 <%- include('../partials/header') %>
-    <h2>Registrar Nuevo Cacharrito</h2>
+    <h2><%= t('newItemTitle') %></h2>
     <div class="card">
         <form method="POST" action="/items" enctype="multipart/form-data">
-            <label>Nombre del Item</label>
-            <input type="text" name="name" required placeholder="Ej: Disco Duro SSD 1TB">
+            <label><%= t('itemName') %></label>
+            <input type="text" name="name" required placeholder="<%= t('itemExample') %>">
 
-            <label for="item-image">Imágenes</label>
+            <label for="item-image"><%= t('images') %></label>
             <input id="item-image" type="file" name="images" accept="image/*" multiple>
             <div class="upload-preview" data-upload-preview></div>
 
-            <label>Ubicación</label>
+            <label><%= t('location') %></label>
             <div class="hierarchy-field hierarchy-native-field">
                 <div class="hierarchy-preview" data-hierarchy-preview hidden>
-                    <img data-hierarchy-image alt="Imagen de la ubicación seleccionada">
+                    <img data-hierarchy-image alt="<%= t('selectedLocation') %>">
                     <span class="hierarchy-image-placeholder" data-hierarchy-placeholder><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
                 </div>
                 <select name="location_id" data-hierarchy-native-select>
-                    <option value="">-- Raíz (Sin asignar) --</option>
+                    <option value=""><%= t('rootUnassigned') %></option>
                     <% locations.forEach(function(loc) { %>
                         <option value="<%= loc.id %>" data-image="<%= loc.image || '' %>" data-icon="bi-geo-alt"><%- '&nbsp;'.repeat(loc.depth * 4) %><%= loc.name %></option>
                     <% }); %>
                 </select>
             </div>
 
-            <label>Categoría</label>
+            <label><%= t('category') %></label>
             <div class="hierarchy-field hierarchy-native-field">
                 <div class="hierarchy-preview" data-hierarchy-preview hidden>
-                    <img data-hierarchy-image alt="Imagen de la categoría seleccionada">
+                    <img data-hierarchy-image alt="<%= t('category') %>">
                     <span class="hierarchy-image-placeholder" data-hierarchy-placeholder><i class="bi bi-tag" aria-hidden="true"></i></span>
                 </div>
                 <select name="category_id" data-hierarchy-native-select>
-                    <option value="">-- Raíz (Sin asignar) --</option>
+                    <option value=""><%= t('rootUnassigned') %></option>
                     <% categories.forEach(function(cat) { %>
                         <option value="<%= cat.id %>" data-image="<%= cat.image || '' %>" data-icon="bi-tag"><%- '&nbsp;'.repeat(cat.depth * 4) %><%= cat.name %></option>
                     <% }); %>
                 </select>
             </div>
-            <label>Cantidad</label>
+            <label><%= t('quantity') %></label>
             <input type="number" name="quantity" value="1" min="1" required>
 
-            <button type="submit" class="btn">Guardar</button>
-            <a href="/items" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn"><%= t('save') %></button>
+            <a href="/items" class="btn btn-secondary"><%= t('cancel') %></a>
         </form>
     </div>
     <%- include('../partials/footer') %>

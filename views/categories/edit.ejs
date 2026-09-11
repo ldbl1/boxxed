@@ -1,27 +1,27 @@
 <%- include('../partials/header') %>
-<h2>Editar Categoría</h2>
+<h2><%= t('editCategoryTitle') %></h2>
 <div class="card">
     <form id="edit-category-form" method="POST" action="/categories/<%= category.id %>/edit" enctype="multipart/form-data">
-        <label>Nombre de la Categoría</label>
+        <label><%= t('categoryName') %></label>
         <input type="text" name="name" value="<%= category.name %>" required>
 
-        <label for="category-image">Imagen</label>
+        <label for="category-image"><%= t('image') %></label>
         <% if (!category.gallery.images.length) { %><input id="category-image" type="file" name="image" accept="image/*"><% } %>
         <div class="upload-preview" data-upload-preview></div>
         <% const mediaType = 'categories'; const mediaGallery = category.gallery; const mediaId = category.id; %>
         <%- include('../partials/media-gallery', { mediaType: mediaType, mediaGallery: mediaGallery, mediaId: mediaId, sharedGallery: null, regionsEnabled: false, showPrimary: false, readOnly: false }) %>
         
-        <label>Pertenece a (Jerarquía)</label>
+        <label><%= t('belongsTo') %></label>
         <div class="hierarchy-select">
             <select name="parent_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
-                <option value="">-- Categoría Principal --</option>
+                <option value=""><%= t('mainCategory') %></option>
                 <% categories.forEach(function(cat) { %>
                     <option value="<%= cat.id %>" data-full-path="<%= cat.fullPath %>" <%= category.parent_id == cat.id ? 'selected' : '' %>><%= cat.name %></option>
                 <% }); %>
             </select>
             <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
             <div class="hierarchy-select-menu" role="listbox" hidden>
-                <button type="button" class="hierarchy-select-option" data-value="">-- Categoría Principal --</button>
+                <button type="button" class="hierarchy-select-option" data-value=""><%= t('mainCategory') %></button>
                 <% categories.forEach(function(cat) { %>
                     <button type="button" class="hierarchy-select-option" data-value="<%= cat.id %>" data-label="<%= cat.fullPath %>" data-depth="<%= cat.depth %>"><%= cat.name %></button>
                 <% }); %>
@@ -30,10 +30,10 @@
         
     </form>
     <div class="edit-actions">
-        <button type="submit" form="edit-category-form" class="btn">Actualizar</button>
-        <a href="/categories" class="btn btn-secondary">Cancelar</a>
-        <form method="POST" action="/categories/<%= category.id %>/delete" class="delete-form" data-confirm="¿Eliminar esta categoría? Sus hijos pasarán a ser principales.">
-            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> Eliminar categoría</button>
+        <button type="submit" form="edit-category-form" class="btn"><%= t('update') %></button>
+        <a href="/categories" class="btn btn-secondary"><%= t('cancel') %></a>
+        <form method="POST" action="/categories/<%= category.id %>/delete" class="delete-form" data-confirm="<%= t('deleteCategoryConfirm') %>">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash" aria-hidden="true"></i> <%= t('delete') %></button>
         </form>
     </div>
 </div>

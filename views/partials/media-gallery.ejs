@@ -6,22 +6,22 @@
             <% const filename = entry.filename; const region = regionsEnabled ? (mediaGallery && mediaGallery.regions[filename] || null) : null; %>
             <article class="media-card" data-filename="<%= filename %>" data-shared="<%= entry.shared %>" data-clip='<%= JSON.stringify(entry.clip || { x: 0, y: 0, width: 1, height: 1 }) %>' data-region='<%= JSON.stringify(region) %>'>
                 <div class="media-frame media-crop-frame">
-                    <img class="media-image" src="/uploads/<%= filename %>" alt="Imagen subida">
-                    <% if (!entry.shared && !readOnly) { %><button type="button" class="media-delete-button" data-media-action="delete" title="Eliminar foto"><i class="bi bi-trash" aria-hidden="true"></i></button><% } %>
+                    <img class="media-image" src="/uploads/<%= filename %>" alt="<%= t('uploadedImage') %>">
+                    <% if (!entry.shared && !readOnly) { %><button type="button" class="media-delete-button" data-media-action="delete" title="<%= t('deletePhoto') %>"><i class="bi bi-trash" aria-hidden="true"></i></button><% } %>
                 </div>
                 <% if (!entry.shared && showPrimary) { %><label class="media-primary-label">
-                    <input type="radio" name="primary_image" value="<%= filename %>" <%= mediaGallery.primary === filename ? 'checked' : '' %>> Foto principal
+                    <input type="radio" name="primary_image" value="<%= filename %>" <%= mediaGallery.primary === filename ? 'checked' : '' %>> <%= t('primaryPhoto') %>
                 </label><% } %>
-                <% if (regionsEnabled && !readOnly) { %><button type="button" class="btn btn-secondary media-region-button" data-media-action="region"><i class="bi bi-bounding-box" aria-hidden="true"></i> <%= entry.shared ? 'Seleccionar dentro de esta zona' : 'Marcar zona' %></button><% } %>
+                <% if (regionsEnabled && !readOnly) { %><button type="button" class="btn btn-secondary media-region-button" data-media-action="region"><i class="bi bi-bounding-box" aria-hidden="true"></i> <%= entry.shared ? t('selectZone') : t('markZone') %></button><% } %>
                 <% if (regionsEnabled) { %><dialog class="region-dialog">
                     <div class="region-editor">
                         <div class="region-canvas" data-clip='<%= JSON.stringify(entry.clip || { x: 0, y: 0, width: 1, height: 1 }) %>'>
-                            <img class="region-image" src="/uploads/<%= filename %>" alt="Seleccionar zona">
+                            <img class="region-image" src="/uploads/<%= filename %>" alt="<%= t('selectZoneTitle') %>">
                             <span class="region-selection"></span>
                         </div>
                         <div class="region-actions">
-                            <button type="button" class="btn btn-secondary" data-region-action="cancel">Cancelar</button>
-                            <button type="button" class="btn" data-region-action="save">Guardar zona</button>
+                            <button type="button" class="btn btn-secondary" data-region-action="cancel"><%= t('cancel') %></button>
+                            <button type="button" class="btn" data-region-action="save"><%= t('saveZone') %></button>
                         </div>
                     </div>
                 </dialog><% } %>
@@ -32,7 +32,7 @@
     <div class="media-gallery <%= mediaType === 'locations' ? 'media-gallery-location' : '' %>">
         <div class="media-empty-placeholder">
             <i class="bi <%= mediaType === 'items' ? 'bi-box-seam' : mediaType === 'categories' ? 'bi-tag' : 'bi-geo-alt' %>" aria-hidden="true"></i>
-            <span>Sin foto</span>
+            <span><%= t('noPhoto') %></span>
         </div>
     </div>
 <% } %>

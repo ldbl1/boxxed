@@ -1,32 +1,32 @@
 <%- include('../partials/header') %>
-<h2>Nueva Ubicación</h2>
+<h2><%= t('newLocationTitle') %></h2>
 <div class="card">
     <form method="POST" action="/locations" enctype="multipart/form-data">
-        <label>Nombre (Ej: Cajón 1)</label>
+        <label><%= t('locationName') %> (<%= t('locationExample') %>)</label>
         <input type="text" name="name" required>
 
-        <label for="location-image">Imagen</label>
+        <label for="location-image"><%= t('image') %></label>
         <input id="location-image" type="file" name="image" accept="image/*">
         <div class="upload-preview" data-upload-preview></div>
         
-        <label>Pertenece a (Jerarquía)</label>
+        <label><%= t('belongsTo') %></label>
         <div class="hierarchy-select">
             <select name="parent_id" class="hierarchy-select-native" aria-hidden="true" tabindex="-1">
-                <option value="">-- Ubicación Principal --</option>
+                <option value=""><%= t('mainLocation') %></option>
                 <% locations.forEach(function(loc) { %>
                     <option value="<%= loc.id %>" data-full-path="<%= loc.fullPath %>"><%= loc.name %></option>
                 <% }); %>
             </select>
             <button type="button" class="hierarchy-select-button" aria-haspopup="listbox" aria-expanded="false"></button>
             <div class="hierarchy-select-menu" role="listbox" hidden>
-                <button type="button" class="hierarchy-select-option" data-value="">-- Ubicación Principal --</button>
+                <button type="button" class="hierarchy-select-option" data-value=""><%= t('mainLocation') %></button>
                 <% locations.forEach(function(loc) { %>
                     <button type="button" class="hierarchy-select-option" data-value="<%= loc.id %>" data-label="<%= loc.fullPath %>" data-depth="<%= loc.depth %>"><%= loc.name %></button>
                 <% }); %>
             </div>
         </div>
         
-        <button type="submit" class="btn">Guardar</button>
+        <button type="submit" class="btn"><%= t('save') %></button>
     </form>
 </div>
 <%- include('../partials/footer') %>

@@ -34,6 +34,11 @@ db.serialize(() => {
         FOREIGN KEY(category_id) REFERENCES categories(id)
     )`);
 
+    db.run(`CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+    )`);
+
     db.run('ALTER TABLE categories ADD COLUMN image TEXT', () => {});
     db.run('ALTER TABLE locations ADD COLUMN image TEXT', () => {});
     db.run('ALTER TABLE items ADD COLUMN image TEXT', () => {});

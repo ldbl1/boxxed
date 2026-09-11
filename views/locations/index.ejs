@@ -1,10 +1,10 @@
 <%- include('../partials/header') %>
 <div class="header-bar">
-    <h2>Ubicaciones</h2>
-    <a href="/locations/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva Ubicación</a>
+    <h2><%= t('locations') %></h2>
+    <a href="/locations/new" class="btn"><i class="bi bi-plus-lg" aria-hidden="true"></i> <%= t('newLocation') %></a>
 </div>
 
-<input type="text" id="searchInput" class="search-input" onkeyup="filterItems('.tree-item')" placeholder="Buscar ubicación...">
+<input type="text" id="searchInput" class="search-input" onkeyup="filterItems('.tree-item')" placeholder="<%= t('searchLocation') %>">
 
 <!-- Función recursiva en EJS para pintar hijos dentro de padres -->
 <% function renderTree(nodes) { %>
@@ -19,9 +19,9 @@
                     <strong><%= node.name %></strong>
                 </div>
                 <div class="tree-actions">
-                    <a href="/locations/<%= node.id %>/edit" class="btn btn-small">Editar</a>
-                    <form method="POST" action="/locations/<%= node.id %>/delete" class="delete-form" data-confirm="¿Eliminar esta ubicación? Sus hijos pasarán a ser principales.">
-                        <button type="submit" class="btn btn-danger btn-small" title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                    <a href="/locations/<%= node.id %>/edit" class="btn btn-small"><%= t('edit') %></a>
+                    <form method="POST" action="/locations/<%= node.id %>/delete" class="delete-form" data-confirm="<%= t('deleteLocationConfirm') %>">
+                        <button type="submit" class="btn btn-danger btn-small" title="<%= t('delete') %>"><i class="bi bi-trash" aria-hidden="true"></i></button>
                     </form>
                 </div>
             </div>

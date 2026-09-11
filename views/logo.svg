@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Boxxed</title>
+  <desc id="desc">A pastel box with a lid</desc>
+  <path fill="#2c3e50" d="M16 30 48 14l32 16v38L48 84 16 68V30Z"/>
+  <path fill="#9fc5e8" d="m16 30 32 16 32-16-32-16-32 16Z"/>
+  <path fill="#e8a4b8" d="m48 46 32-16v38L48 84V46Z"/>
+  <path fill="#9acfc0" d="m16 30 32 16v38L16 68V30Z"/>
+  <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M48 47v34M31 38l17 9 17-9"/>
+</svg>
