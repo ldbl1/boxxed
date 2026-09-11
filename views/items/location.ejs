@@ -1,14 +1,14 @@
 <%- include('../partials/header') %>
 <div class="header-bar">
     <div>
-        <a href="/items" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i> Inventario</a>
+        <button type="button" class="back-link back-button" onclick="goBack()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver</button>
         <h2>Ubicación de <%= item.name %></h2>
     </div>
 </div>
 
 <nav class="location-breadcrumb" aria-label="Ruta de ubicación">
     <% trail.forEach(function(location, index) { %>
-        <% if (index) { %><span class="location-breadcrumb-separator">/</span><% } %>
+        <% if (index) { %><span class="location-breadcrumb-separator">></span><% } %>
         <strong><%= location.name %></strong>
     <% }); %>
 </nav>
